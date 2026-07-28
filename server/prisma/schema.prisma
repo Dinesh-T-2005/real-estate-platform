@@ -23,3 +23,26 @@ model User {
   updatedAt    DateTime @updatedAt
 }
 
+model Property {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  price        Decimal  @db.Decimal(12,2)
+
+  location     String
+  city         String
+
+  bedrooms     Int
+  bathrooms    Int
+  parking      Int
+
+  area         Int
+
+  propertyType String
+
+  image         String
+  featured      Boolean @default(false)
+  isAvailable   Boolean @default(true)
+
+  createdAt    DateTime @default(now())
+}
