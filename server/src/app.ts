@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import routes from "./routes";
+import path from "path";
 
 const app = express();
 
@@ -15,5 +16,10 @@ app.use(
 app.use(express.json());
 
 app.use("/api", routes);
+
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "uploads"))
+);
 
 export default app;

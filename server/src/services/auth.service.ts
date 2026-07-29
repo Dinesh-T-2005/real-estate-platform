@@ -1,16 +1,38 @@
-import { createUser } from "../repositories/auth.repository";
+import prisma from "../lib/prisma";
+import bcrypt from "bcryptjs";
+import { generateToken } from "../utils/jwt";
 
-export const registerUser = async () => {
-  const user = await createUser({
-    fullName: "Dinesh",
-    email: "dinesh@gmail.com",
-    passwordHash: "123456",
-    phone: "9876543210",
+export async function loginUser(email: string, password: string) {
+  // Find user by email
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  // Compare password
+  const isMatch = await bcrypt.compare(password, user.passwordHash);
+
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  // Generate JWT
+  const token = generateToken({
+    id: user.id,
+    email: user.email,
+    role: user.role,
   });
 
   return {
-    success: true,
-    message: "User Registered",
-    data: user,
+    token,
+    user: {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    },
   };
-};
+}

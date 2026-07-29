@@ -28,13 +28,19 @@ export default async function PropertyGrid() {
               property={{
                 id: property.id,
                 title: property.title,
+                description: property.description,
+                price: Number(property.price),
                 location: property.location,
-                price: `₹${Number(property.price).toLocaleString("en-IN")}`,
-                beds: property.bedrooms,
-                baths: property.bathrooms,
+                city: property.city,
+                bedrooms: property.bedrooms,
+                bathrooms: property.bathrooms,
                 parking: property.parking,
-                rating: 4.9,
+                area: property.area,
+                propertyType: property.propertyType,
                 image: property.image,
+                featured: property.featured,
+                isAvailable: property.isAvailable,
+                createdAt: property.createdAt,
               }}
             />
           ))}

@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -24,25 +25,61 @@ model User {
 }
 
 model Property {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  price        Decimal  @db.Decimal(12,2)
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  price       Decimal @db.Decimal(12, 2)
 
-  location     String
-  city         String
+  location String
+  city     String
 
-  bedrooms     Int
-  bathrooms    Int
-  parking      Int
+  bedrooms  Int
+  bathrooms Int
+  parking   Int
 
-  area         Int
+  area Int
 
   propertyType String
 
-  image         String
-  featured      Boolean @default(false)
-  isAvailable   Boolean @default(true)
+  image       String
+  featured    Boolean @default(false)
+  isAvailable Boolean @default(true)
 
-  createdAt    DateTime @default(now())
+  createdAt DateTime  @default(now())
+  enquiries Enquiry[]
 }
+
+model Enquiry {
+  id         String    @id @default(uuid())
+  propertyId String
+  fullName   String
+  email      String
+  phone      String
+  visitDate  DateTime?
+  message    String
+
+  createdAt DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id            String   @id @default(uuid())
+
+  companyName   String
+  companyLogo   String?
+
+  email         String
+  phone         String
+
+  address       String
+  about         String?
+
+  facebook      String?
+  instagram     String?
+  linkedin      String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+

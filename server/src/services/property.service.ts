@@ -15,3 +15,31 @@ export const createProperty = async (data: any) => {
     data,
   });
 };
+
+export const deleteProperty = async (id: string) => {
+  return await prisma.property.delete({
+    where: {
+      id,
+    },
+  });
+};
+
+export const getPropertyById = async (id: string) => {
+  return await prisma.property.findUnique({
+    where: {
+      id,
+    },
+  });
+};
+
+export const updateProperty = async (
+  id: string,
+  data: any
+) => {
+  return await prisma.property.update({
+    where: {
+      id,
+    },
+    data,
+  });
+};

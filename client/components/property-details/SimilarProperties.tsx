@@ -1,41 +1,37 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Bath, BedDouble, Car, MapPin } from "lucide-react";
 
-const properties = [
-  {
-    id: 2,
-    title: "Modern Apartment",
-    location: "Bangalore",
-    price: "₹95 Lakhs",
-    beds: 3,
-    baths: 2,
-    parking: 1,
-    image: "/images/apartment1.jpg",
-  },
-  {
-    id: 3,
-    title: "Premium Villa",
-    location: "Hyderabad",
-    price: "₹1.8 Cr",
-    beds: 4,
-    baths: 3,
-    parking: 2,
-    image: "/images/villa2.jpg",
-  },
-  {
-    id: 4,
-    title: "Luxury Penthouse",
-    location: "Chennai",
-    price: "₹3.2 Cr",
-    beds: 5,
-    baths: 4,
-    parking: 2,
-    image: "/images/villa3.jpg",
-  },
-];
+import { getProperties } from "@/lib/api";
+import { Property } from "@/types/property";
 
-export default function SimilarProperties() {
+interface Props {
+  currentId?: string;
+}
+
+export default function SimilarProperties({ currentId }: Props) {
+  const [properties, setProperties] = useState<Property[]>([]);
+
+  useEffect(() => {
+    loadProperties();
+  }, []);
+
+  async function loadProperties() {
+    try {
+      const data = await getProperties();
+
+      // Current property remove pannrom
+      setProperties(
+        data.filter((item: Property) => item.id !== currentId).slice(0, 3)
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <section className="bg-slate-50 py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -64,9 +60,11 @@ export default function SimilarProperties() {
               <div className="relative h-64">
 
                 <Image
-                  src={property.image}
+                  src={`http://localhost:8000${property.image}`}
                   alt={property.title}
                   fill
+                  unoptimized
+                  sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
                   className="object-cover"
                 />
 
@@ -80,24 +78,26 @@ export default function SimilarProperties() {
 
                 <div className="mt-3 flex items-center gap-2 text-slate-500">
                   <MapPin size={18} />
-                  {property.location}
+                  <span>
+                    {property.location}, {property.city}
+                  </span>
                 </div>
 
                 <div className="mt-6 flex justify-between text-slate-600">
 
                   <div className="flex items-center gap-2">
                     <BedDouble size={18} />
-                    {property.beds}
+                    <span>{property.bedrooms}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <Bath size={18} />
-                    {property.baths}
+                    <span>{property.bathrooms}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <Car size={18} />
-                    {property.parking}
+                    <span>{property.parking}</span>
                   </div>
 
                 </div>
@@ -105,7 +105,7 @@ export default function SimilarProperties() {
                 <div className="mt-8 flex items-center justify-between">
 
                   <h3 className="text-3xl font-bold text-blue-600">
-                    {property.price}
+                    ₹{Number(property.price).toLocaleString("en-IN")}
                   </h3>
 
                   <Link

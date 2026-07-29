@@ -7,15 +7,29 @@ import PropertyAmenities from "@/components/property-details/PropertyAmenities";
 import AgentCard from "@/components/property-details/AgentCard";
 import ContactForm from "@/components/property-details/ContactForm";
 import SimilarProperties from "@/components/property-details/SimilarProperties";
+import { getPropertyById } from "@/lib/api";
 
-export default function PropertyDetailsPage() {
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function PropertyDetailsPage({
+  params,
+}: Props) {
+
+  const { id } = await params;
+
+  const property = await getPropertyById(id);
+
   return (
     <>
       <Navbar />
 
       <main className="bg-slate-50">
 
-        <PropertyGallery />
+        <PropertyGallery property={property} />
 
         <PropertyInfo />
 
@@ -24,7 +38,7 @@ export default function PropertyDetailsPage() {
         <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-3">
 
           <div className="lg:col-span-2">
-            <ContactForm />
+            <ContactForm propertyId={property.id} />
           </div>
 
           <div>
@@ -33,7 +47,7 @@ export default function PropertyDetailsPage() {
 
         </div>
 
-        <SimilarProperties />
+        <SimilarProperties currentId={id} />
 
       </main>
 
