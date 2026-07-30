@@ -198,3 +198,17 @@ export async function updateSettings(data: any) {
 
   return result.data;
 }
+
+export async function searchProperties(params: URLSearchParams) {
+  const response = await fetch(
+    `http://localhost:8000/api/properties/search?${params.toString()}`
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.message);
+  }
+
+  return result.data;
+}
