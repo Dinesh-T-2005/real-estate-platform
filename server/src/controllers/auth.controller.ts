@@ -1,7 +1,27 @@
 import { Request, Response } from "express";
 import { loginUser } from "../services/auth.service";
+import * as authService from "../services/auth.service";
 
 
+export async function register(
+  req: Request,
+  res: Response
+) {
+  try {
+    const user = await authService.register(req.body);
+
+    res.status(201).json({
+      success: true,
+      message: "Registration Successful",
+      data: user,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 export async function loginController(req: Request, res: Response) {
   try {

@@ -5,15 +5,21 @@ interface PropertyFilterProps {
     city: string;
     propertyType: string;
     bedrooms: string;
+    minPrice: string;
+    maxPrice: string;
   };
   onChange: (name: string, value: string) => void;
   onSearch: () => void;
+  onReset: () => void;
 }
+
+
 
 export default function PropertyFilter({
   filters,
   onChange,
   onSearch,
+  onReset,
 }: PropertyFilterProps) {
   return (
     <section className="bg-white py-8 shadow-sm">
@@ -43,23 +49,38 @@ export default function PropertyFilter({
             <option value="Land">Land</option>
           </select>
 
-          <select
-            value={filters.bedrooms}
-            onChange={(e) => onChange("bedrooms", e.target.value)}
-            className="rounded-xl !text-black border p-4"
-          >
-            <option value="">Bedrooms</option>
-            <option value="1">1 BHK</option>
-            <option value="2">2 BHK</option>
-            <option value="3">3 BHK</option>
-            <option value="4">4 BHK+</option>
-          </select>
+          <div>
+            <input
+              type="number"
+              placeholder="Min Price"
+              value={filters.minPrice}
+              onChange={(e) => onChange("minPrice", e.target.value)}
+              className="w-full !text-black rounded-xl border p-4"
+            />
+          </div>
+
+          <div>
+            <input
+              type="number"
+              placeholder="Max Price"
+              value={filters.maxPrice}
+              onChange={(e) => onChange("maxPrice", e.target.value)}
+              className="w-full !text-black rounded-xl border p-4"
+            />
+          </div>
 
           <button
             onClick={onSearch}
             className="rounded-xl bg-blue-600 px-6 font-semibold text-white hover:bg-blue-700"
           >
             Apply Filters
+          </button>
+
+          <button
+            onClick={onReset}
+            className="rounded-xl border bg-blue-600 border-slate-300 px-6 py-4 font-semibold"
+          >
+            Reset
           </button>
 
         </div>

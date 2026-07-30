@@ -7,6 +7,11 @@ import enquiryRoutes from "./enquiry.routes";
 import dashboardRoutes from "./dashboard.routes";
 import settingsRoutes from "./settings.routes";
 import searchRoutes from "./search.routes";
+import propertyImageRoutes from "./propertyImage.routes";
+import userRoutes from "./user.routes";
+import savedPropertyRoutes from "./savedProperty.routes";
+import userEnquiryRoutes from "./userEnquiry.routes";
+
 
 const router = Router();
 
@@ -18,4 +23,9 @@ router.use("/dashboard", dashboardRoutes);
 router.use("/enquiries", enquiryRoutes);
 router.use("/properties", propertyRoutes);
 router.use("/upload", uploadRoutes);
+router.use("/property-images", propertyImageRoutes);
+router.use("/user", userRoutes);
+router.use("/saved-properties", savedPropertyRoutes);
+router.use("/user/enquiries", userEnquiryRoutes);
+
 export default router;

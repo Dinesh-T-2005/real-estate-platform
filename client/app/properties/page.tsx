@@ -19,8 +19,9 @@ export default function PropertiesPage() {
     city: "",
     propertyType: "",
     bedrooms: "",
+    minPrice: "",
+    maxPrice: "",
   });
-
 
 
   useEffect(() => {
@@ -38,7 +39,19 @@ export default function PropertiesPage() {
       [name]: value,
     }));
   }
+  async function handleReset() {
+    setFilters({
+      keyword: "",
+      city: "",
+      propertyType: "",
+      bedrooms: "",
+      minPrice: "",
+      maxPrice: "",
+    });
 
+    const data = await getProperties();
+    setProperties(data);
+  }
   async function handleSearch() {
     const params = new URLSearchParams();
 
@@ -58,11 +71,18 @@ export default function PropertiesPage() {
       params.append("bedrooms", filters.bedrooms);
     }
 
+    if (filters.minPrice) {
+      params.append("minPrice", filters.minPrice);
+    }
+
+    if (filters.maxPrice) {
+      params.append("maxPrice", filters.maxPrice);
+    }
+
     const data = await searchProperties(params);
 
     setProperties(data);
   }
-
   return (
     <>
       <Navbar />
@@ -79,6 +99,7 @@ export default function PropertiesPage() {
         filters={filters}
         onChange={handleChange}
         onSearch={handleSearch}
+        onReset={handleReset}
       />
 
       <PropertyGrid properties={properties} />

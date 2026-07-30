@@ -6,6 +6,8 @@ import {
   LayoutDashboard,
   Building2,
   MessageSquare,
+  Users,
+  Settings,
   LogOut,
 } from "lucide-react";
 
@@ -26,9 +28,24 @@ export default function Sidebar() {
       icon: LayoutDashboard,
     },
     {
+      name: "User Management",
+      href: "/dashboard/users",
+      icon: Users,
+    },
+    {
+      name: "Add Property",
+      href: "/dashboard/properties/new",
+      icon: Building2,
+    },
+    {
       name: "Properties",
       href: "/dashboard/properties",
       icon: Building2,
+    },
+    {
+      name: "Company Settings",
+      href: "/dashboard/settings",
+      icon: Settings,
     },
     {
       name: "Enquiries",
@@ -38,47 +55,70 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="flex h-screen w-64 flex-col bg-slate-900 text-white">
+    <aside className="fixed left-0 top-0 z-50 flex h-screen w-64 flex-col bg-slate-900 text-white shadow-xl">
+
+      {/* Logo */}
+
       <div className="border-b border-slate-700 p-6">
-        <h1 className="text-2xl font-bold">
+
+        <h1 className="text-3xl font-bold">
           Real Estate
         </h1>
 
-        <p className="text-sm text-slate-400">
+        <p className="mt-1 text-sm text-slate-400">
           Admin Panel
         </p>
+
       </div>
 
-      <nav className="flex-1 p-4 space-y-2">
+      {/* Menu */}
+
+      <nav className="flex-1 space-y-2 overflow-y-auto p-4">
+
         {menus.map((menu) => {
           const Icon = menu.icon;
+
+          const active =
+            menu.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : menu.href === "/dashboard/properties"
+                ? pathname === "/dashboard/properties"
+                : menu.href === "/dashboard/properties/new"
+                  ? pathname === "/dashboard/properties/new"
+                  : pathname === menu.href ||
+                  pathname.startsWith(menu.href + "/");
 
           return (
             <Link
               key={menu.href}
               href={menu.href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 transition ${
-                pathname === menu.href
-                  ? "bg-blue-600"
-                  : "hover:bg-slate-800"
-              }`}
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all ${active
+                ? "bg-blue-600 text-white shadow-lg"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
             >
               <Icon size={20} />
-              {menu.name}
+              <span>{menu.name}</span>
             </Link>
           );
         })}
+
       </nav>
 
+      {/* Logout */}
+
       <div className="border-t border-slate-700 p-4">
+
         <button
           onClick={logout}
-          className="flex w-full items-center gap-3 rounded-xl bg-red-600 px-4 py-3 hover:bg-red-700"
+          className="flex w-full items-center justify-center gap-3 rounded-xl bg-red-600 px-4 py-3 font-semibold transition hover:bg-red-700"
         >
           <LogOut size={20} />
           Logout
         </button>
+
       </div>
+
     </aside>
   );
 }

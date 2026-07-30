@@ -1,19 +1,13 @@
-import DashboardStats from "@/components/dashboard/DashboardStats";
+// import DashboardCards from "@/components/dashboard/DashboardCards";
+import MonthlyChart from "@/components/dashboard/MonthlyChart";
 
 export default function DashboardPage() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-4xl font-bold text-slate-900">
-          Admin Dashboard
-        </h1>
+      {/* <DashboardCards /> */}
 
-        <p className="mt-2 text-slate-500">
-          Welcome to the Real Estate Admin Dashboard
-        </p>
-      </div>
+      <MonthlyChart />
 
-      <DashboardStats />
     </div>
   );
 }

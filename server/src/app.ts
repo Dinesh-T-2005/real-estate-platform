@@ -3,6 +3,7 @@ import cors from "cors";
 import routes from "./routes";
 import path from "path";
 import propertyRoutes from "./routes/property.routes";
+import propertyImageRoutes from "./routes/propertyImage.routes";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(
 
 app.use(express.json());
 app.use("/api/properties", propertyRoutes);
+app.use("/api/property-images", propertyImageRoutes);
 app.use("/api", routes);
 
 app.use(

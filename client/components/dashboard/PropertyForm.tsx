@@ -4,16 +4,22 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-import { uploadImage } from "@/lib/api";
+import { getPropertyGallery, uploadImage } from "@/lib/api";
 
 import {
     propertySchema,
     PropertyFormInput,
 } from "@/lib/validations/property";
 
+
 interface PropertyFormProps {
     initialData?: Partial<PropertyFormInput>;
-    onSubmit: (data: PropertyFormInput) => Promise<void>;
+
+    onSubmit: (
+        data: PropertyFormInput,
+        gallery: File[]
+    ) => Promise<void>;
+
     buttonText: string;
 }
 
@@ -33,6 +39,9 @@ export default function PropertyForm({
 
     const [preview, setPreview] = useState("");
     const [uploading, setUploading] = useState(false);
+    const [gallery, setGallery] = useState<File[]>([]);
+    const [existingGallery, setExistingGallery] = useState<any[]>([]);
+
     const handleImageUpload = async (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -56,7 +65,13 @@ export default function PropertyForm({
             setUploading(false);
         }
     };
+    function handleGalleryChange(
+        e: React.ChangeEvent<HTMLInputElement>
+    ) {
+        if (!e.target.files) return;
 
+        setGallery(Array.from(e.target.files));
+    }
     const {
         register,
         handleSubmit,
@@ -83,14 +98,52 @@ export default function PropertyForm({
     });
 
     useEffect(() => {
-        if (initialData) {
+
+        async function loadData() {
+
+            if (!initialData) return;
+
             reset(initialData);
+
+            if (initialData.image) {
+                setPreview(
+                    `http://localhost:8000${initialData.image}`
+                );
+            }
+
+            if ((initialData as any).id) {
+
+                const images =
+                    await getPropertyGallery(
+                        (initialData as any).id
+                    );
+
+                setExistingGallery(images);
+
+            }
+
         }
+
+        loadData();
+
     }, [initialData, reset]);
+
+
 
     const submitForm = async (data: PropertyFormInput) => {
         try {
-            await onSubmit(data);
+            await onSubmit(data, gallery);
+
+            // Reset form values
+            reset();
+
+            // Reset main image preview
+            setPreview("");
+
+            // Reset gallery preview
+            setGallery([]);
+
+            toast.success("Property Added Successfully");
         } catch (error: any) {
             toast.error(error.message || "Something went wrong");
         }
@@ -245,6 +298,67 @@ export default function PropertyForm({
                     <option value="Penthouse">Penthouse</option>
                     <option value="Land">Land</option>
                 </select>
+
+            </div>
+
+            <div className="mt-6">
+
+                <label className={labelClass}>
+                    Gallery Images
+                </label>
+
+                <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleGalleryChange}
+                    className={inputClass}
+                />
+
+                {gallery.length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+                        {gallery.map((file: File, index: number) => (
+                            <img
+                                key={index}
+                                src={URL.createObjectURL(file)}
+                                alt={`Gallery ${index + 1}`}
+                                className="h-28 w-full rounded-lg object-cover"
+                            />
+                        ))}
+                    </div>
+                )}
+
+            </div>
+            <div className="mt-6">
+
+                <label className={labelClass}>
+                    Existing Gallery
+                </label>
+
+                {existingGallery.length === 0 ? (
+
+                    <p className="text-slate-500">
+                        No gallery images
+                    </p>
+
+                ) : (
+
+                    <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+
+                        {existingGallery.map((img: any) => (
+
+                            <img
+                                key={img.id}
+                                src={`http://localhost:8000${img.image}`}
+                                alt=""
+                                className="h-28 w-full rounded-lg object-cover border"
+                            />
+
+                        ))}
+
+                    </div>
+
+                )}
 
             </div>
 

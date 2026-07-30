@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Bath,
@@ -10,43 +9,16 @@ import {
   MapPin,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getProperties } from "@/lib/api";
 import { Property } from "@/types/property";
 
-export default function Featured() {
+interface FeaturedProps {
+  properties: Property[];
+}
+
+export default function Featured({
+  properties,
+}: FeaturedProps) {
   const router = useRouter();
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
-
-
-
-
-  useEffect(() => {
-    loadProperties();
-  }, []);
-
-  async function loadProperties() {
-    try {
-      const data = await getProperties();
-      setProperties(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  if (loading) {
-    return (
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-4xl font-bold text-slate-900">
-            Loading Properties...
-          </h2>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="bg-slate-50 py-24">
@@ -76,15 +48,12 @@ export default function Featured() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 
             {properties.map((property) => (
-
               <div
                 key={property.id}
                 className="group overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-3 hover:shadow-2xl"
               >
 
-                {/* Image */}
                 <div className="relative h-72 w-full overflow-hidden">
-
                   <Image
                     src={`http://localhost:8000${property.image}`}
                     alt={property.title}
@@ -97,10 +66,7 @@ export default function Featured() {
                   <button className="absolute right-4 top-4 rounded-full bg-white p-3 shadow-lg">
                     <Heart size={20} className="text-red-500" />
                   </button>
-
                 </div>
-
-                {/* Content */}
 
                 <div className="p-6">
 
@@ -150,7 +116,6 @@ export default function Featured() {
                 </div>
 
               </div>
-
             ))}
 
           </div>

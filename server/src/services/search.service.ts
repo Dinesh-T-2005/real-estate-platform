@@ -1,14 +1,15 @@
 import prisma from "../lib/prisma";
 
 export async function searchProperties(query: any) {
-  const {
-    keyword,
-    city,
-    propertyType,
-    bedrooms,
-    minPrice,
-    maxPrice,
-  } = query;
+const {
+  keyword,
+  city,
+  propertyType,
+  bedrooms,
+  minPrice,
+  maxPrice,
+  sort,
+} = query;
 
   return await prisma.property.findMany({
     where: {
@@ -74,8 +75,13 @@ export async function searchProperties(query: any) {
       ],
     },
 
-    orderBy: {
-      createdAt: "desc",
-    },
+  orderBy:
+  sort === "price_asc"
+    ? { price: "asc" }
+    : sort === "price_desc"
+    ? { price: "desc" }
+    : sort === "oldest"
+    ? { createdAt: "asc" }
+    : { createdAt: "desc" },
   });
 }
