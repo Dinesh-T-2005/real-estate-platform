@@ -10,6 +10,7 @@ import {
   Lock,
   LogOut,
   Building2,
+  Bot
 } from "lucide-react";
 
 export default function UserSidebar() {
@@ -40,6 +41,11 @@ export default function UserSidebar() {
       href: "/user/properties",
       icon: Building2,
       exact: true,
+    },
+    {
+      name: "AI Assistant",
+      href: "/user/ai-chat",
+      icon: Bot,
     },
     {
       name: "Saved Properties",
@@ -85,17 +91,16 @@ export default function UserSidebar() {
           const active = menu.exact
             ? pathname === menu.href
             : pathname === menu.href ||
-              pathname.startsWith(menu.href + "/");
+            pathname.startsWith(menu.href + "/");
 
           return (
             <Link
               key={menu.href}
               href={menu.href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all ${
-                active
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all ${active
                   ? "bg-blue-600 text-white shadow-lg"
                   : "text-slate-300 hover:bg-slate-800 hover:text-white"
-              }`}
+                }`}
             >
               <Icon size={20} />
               <span>{menu.name}</span>

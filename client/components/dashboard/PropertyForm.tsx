@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-import { getPropertyGallery, uploadImage } from "@/lib/api";
+import { generatePropertyDescription, getPropertyGallery, uploadImage } from "@/lib/api";
+import { Sparkles } from "lucide-react";
 
 import {
     propertySchema,
@@ -41,6 +42,7 @@ export default function PropertyForm({
     const [uploading, setUploading] = useState(false);
     const [gallery, setGallery] = useState<File[]>([]);
     const [existingGallery, setExistingGallery] = useState<any[]>([]);
+    const [generating, setGenerating] = useState(false);
 
     const handleImageUpload = async (
         e: React.ChangeEvent<HTMLInputElement>
@@ -77,6 +79,7 @@ export default function PropertyForm({
         handleSubmit,
         reset,
         setValue,
+        watch,
         formState: { errors, isSubmitting },
     } = useForm<PropertyFormInput>({
         resolver: zodResolver(propertySchema),
@@ -148,6 +151,30 @@ export default function PropertyForm({
             toast.error(error.message || "Something went wrong");
         }
     };
+
+    async function generateDescription() {
+        try {
+            setGenerating(true);
+
+            const description = await generatePropertyDescription({
+                title: String(watch("title")),
+                city: String(watch("city")),
+                price: Number(watch("price")),
+                bedrooms: Number(watch("bedrooms")),
+                bathrooms: Number(watch("bathrooms")),
+                area: Number(watch("area")),
+                type: String(watch("propertyType")),
+            });
+
+            setValue("description", description);
+
+            toast.success("AI Description Generated");
+        } catch (err: any) {
+            toast.error(err.message);
+        } finally {
+            setGenerating(false);
+        }
+    }
 
     return (
         <form
@@ -397,7 +424,25 @@ export default function PropertyForm({
 
             </div>
 
+
             <div className="mt-6">
+
+                <div className="mb-3 flex justify-end">
+
+                    <button
+                        type="button"
+                        onClick={generateDescription}
+                        disabled={generating}
+                        className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white transition hover:bg-purple-700 disabled:opacity-60"
+                    >
+                        <Sparkles size={18} />
+
+                        {generating
+                            ? "Generating..."
+                            : "Generate with AI"}
+                    </button>
+
+                </div>
 
                 <label className={labelClass}>Description</label>
 

@@ -11,6 +11,7 @@ import propertyImageRoutes from "./propertyImage.routes";
 import userRoutes from "./user.routes";
 import savedPropertyRoutes from "./savedProperty.routes";
 import userEnquiryRoutes from "./userEnquiry.routes";
+import aiRoutes from "./ai.routes";
 
 
 const router = Router();
@@ -27,5 +28,6 @@ router.use("/property-images", propertyImageRoutes);
 router.use("/user", userRoutes);
 router.use("/saved-properties", savedPropertyRoutes);
 router.use("/user/enquiries", userEnquiryRoutes);
+router.use("/ai", aiRoutes);
 
 export default router;

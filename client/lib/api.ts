@@ -489,3 +489,50 @@ export async function deleteUser(id: string) {
 
   return json;
 }
+
+export async function generatePropertyDescription(data: {
+  title: string;
+  city: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  area: number;
+  type: string;
+}) {
+  const response = await fetch(
+    `${API_URL}/ai/property-description`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.message);
+  }
+
+  return result.description;
+}
+
+export async function chatWithAI(message: string) {
+  const response = await fetch(`${API_URL}/ai/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.message);
+  }
+
+  return result.reply;
+}
